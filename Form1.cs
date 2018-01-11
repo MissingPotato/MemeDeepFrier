@@ -34,6 +34,7 @@ namespace MemeDeepFrier
 		private void button_fry_Click(object sender, EventArgs e)
 		{
 			friedMeme = Fry ( meme );
+			PreviewMeme();
 		}
 
 
@@ -48,7 +49,37 @@ namespace MemeDeepFrier
 		{
 			// Fry the meme
 
-			return fryMeme;
+			Bitmap fryMePic = new Bitmap(fryMeme);
+
+			for (int x = 0; x < fryMePic.Size.Width; x++)
+			{
+				for (int y = 0; y < fryMePic.Size.Height; y++)
+				{
+
+					Color newColor = fryMePic.GetPixel(x, y);
+
+					fryMePic.SetPixel(x, y, ModifyColor(fryMePic.GetPixel(x, y), 0, x, y));
+				}
+			}
+
+			
+
+			return fryMePic;
+		}
+
+		public Color ModifyColor(Color modColor , int option, int x, int y)
+		{
+
+			Random rand = new Random();
+
+			if (option == 0)
+			{
+				return modColor = Color.FromArgb(modColor.A, modColor.R / rand.Next(1, (modColor.R + x + 1) / 3), modColor.G / rand.Next(1, ( modColor.G + y + 1 ) / 3), modColor.B / rand.Next(1, ( modColor.B + x + 1 ) / 3) );
+			}
+
+			else
+				return modColor;
+
 		}
 		
 		/// <summary>
@@ -57,12 +88,19 @@ namespace MemeDeepFrier
 		public void ExportMeme()
 		{
 			saveFileDialog1.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png | All files(*.*) | *.* ";
-			friedMeme = meme;
 
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
 				friedMeme.Save(saveFileDialog1.FileName);
 			}
+		}
+
+		/// <summary>
+		/// Previews the fried meme
+		/// </summary>
+		public void PreviewMeme()
+		{
+			pictureBox_export.Image = friedMeme;
 		}
 
 		/// <summary>
